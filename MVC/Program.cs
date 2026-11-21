@@ -1,5 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
+using APP.Domain;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DbContext, Db>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString(nameof(Db))));  //dependency injection !!!
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
