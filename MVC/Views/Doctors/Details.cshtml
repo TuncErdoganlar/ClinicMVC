@@ -1,0 +1,43 @@
+﻿@model DoctorResponse
+@{
+    ViewData["Title"] = "Doctor Details";
+}
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+    @if (Model is not null)
+    {
+        <p class="text-success">@TempData["Message"]</p>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.FullNameR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.FullNameR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.BranchTitleR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.BranchTitleR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.IsExpertR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.IsExpertR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.UserNameR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.UserNameR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.PatientNamesR)</div>
+            <div class="col-10">@Html.Raw(Model.PatientNamesR)</div>
+        </div>
+        <hr />
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    
+            @:&nbsp;|&nbsp;
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+
+            @:&nbsp;|&nbsp;
+        }
+    }
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,64 @@
+﻿@model PatientResponse
+@{
+    ViewData["Title"] = "Patient Details";
+}
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+    @if (Model is not null)
+    {
+        <p class="text-success">@TempData["Message"]</p>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.FullNameR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.FullNameR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.GenderR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.GenderR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.BirthDateR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.BirthDateR) (@Model.AgeR years old)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.HeightR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.HeightR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.WeightR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.WeightR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.BmiR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.BmiR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.UserNameR)</div>
+            <div class="col-10">@Html.DisplayFor(model => model.UserNameR)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">@Html.DisplayNameFor(model => model.DoctorsR)</div>
+            <div class="col-10">
+                @* Displaying the mapped complex type list (DoctorsR), Way 2 in the guide. *@
+                @foreach (var doctor in Model.DoctorsR)
+                {
+                    <a asp-controller="Doctors" asp-action="Details" asp-route-id="@doctor.Id">@doctor.FullNameR</a>
+                    <span>(@doctor.BranchTitleR)</span>
+
+                    <br />
+                }
+            </div>
+        </div>
+        <hr />
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    
+            @:&nbsp;|&nbsp;
+            <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+
+            @:&nbsp;|&nbsp;
+        }
+    }
+    <a asp-action="Index">Back to List</a>
+</div>
