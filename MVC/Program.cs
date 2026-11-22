@@ -46,8 +46,7 @@ builder.Services.AddSession(config =>
 });
 builder.Services.AddScoped<SessionService>();
 builder.Services.AddScoped<UserSessionService>();
-//builder.Services.AddScoped<PatientSessionService>();
-
+builder.Services.AddScoped<PatientSessionService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
