@@ -36,7 +36,7 @@ namespace APP.Domain
             foreach (var table in new[] { "DoctorPatients", "Patients", "Doctors", "Branches",
                 "UserRoles", "Roles", "Users", "Statuses" })
             {
-                db.Database.ExecuteSqlRaw($"UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='{table}'");
+                db.Database.ExecuteSql($"UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME={table}");
             }
 
             // Roles:
