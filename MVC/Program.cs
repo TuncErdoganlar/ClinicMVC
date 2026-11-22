@@ -1,13 +1,20 @@
+using APP.Authentication.Services;
 using APP.Domain;
 using APP.Models;
 using APP.Services;
+using CORE.Authentication.Services;
 using CORE.Services;
+using CORE.Session.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ---------- IoC (Inversion of Control) Container ----------
+
+// Database:
 builder.Services.AddDbContext<DbContext, Db>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString(nameof(Db))));  //dependency injection !!!
-// Add services to the container.
+    options.UseSqlite(builder.Configuration.GetConnectionString(nameof(Db))));
 
 // Users module services (from the guide):
 builder.Services.AddScoped<IService<UserRequest, UserResponse>, UserService>();
@@ -19,16 +26,35 @@ builder.Services.AddScoped<IService<BranchRequest, BranchResponse>, BranchServic
 builder.Services.AddScoped<IService<DoctorRequest, DoctorResponse>, DoctorService>();
 builder.Services.AddScoped<IService<PatientRequest, PatientResponse>, PatientService>();
 
+// Authentication:
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICookieAuthService, CookieAuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.SlidingExpiration = true;
+    });
+
+// Session:
+builder.Services.AddSession(config =>
+{
+    config.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+builder.Services.AddScoped<SessionService>();
+builder.Services.AddScoped<UserSessionService>();
+//builder.Services.AddScoped<PatientSessionService>();
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -37,7 +63,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication(); // Who are you? Must be before UseAuthorization.
+app.UseAuthorization();  // What are you allowed to do?
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

@@ -1,8 +1,16 @@
-﻿@{
+﻿@inject IConfiguration configuration
+@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to @configuration["Title"]</h1>
+    <p>
+        A clinic management application: branches, doctors and patients,
+        with a temporary study cohort for authenticated users.
+    </p>
 </div>
+<p class="text-center">
+    Version: @configuration["App:Version"]
+    <br />
+    Date: @configuration["App:Date"]
+</p>

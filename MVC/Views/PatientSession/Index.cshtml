@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PatientSessionResponse>
+@{
+    ViewData["Title"] = "Study Cohort";
+}
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Temporary list of patients kept in your session. It is not saved to the database and expires after 30 minutes of inactivity.</p>
+    <hr />
+    @if (TempData["Message"] is not null)
+    {
+        <p class="bg-warning text-dark p-2">@TempData["Message"]</p>
+    }
+    @if (Model.Any())
+    {
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FullName)</th>
+                <th>@Html.DisplayNameFor(model => model.Age)</th>
+                <th>@Html.DisplayNameFor(model => model.BmiText)</th>
+                <th class="text-end"><a asp-action="Clear">Clear Cohort</a></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td>@item.Age</td>
+                    <td>@item.BmiText</td>
+                    <td class="text-end">
+                        <a asp-action="Remove" asp-route-patientId="@item.PatientId">Remove from Cohort</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="4" class="bg-black text-white">
+                    @Html.Raw(ViewBag.Summary)
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <p class="bg-success text-white p-2">The cohort is empty. Add patients from the patient list.</p>
+    }
+    <a asp-controller="Patients" asp-action="Index">Back to Patients</a>
+</div>
